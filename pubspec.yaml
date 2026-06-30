@@ -37,3 +37,5 @@ platforms:
   macos:
   web:
   windows:
+dependencies:
+  bit_array: ^2.3.0
