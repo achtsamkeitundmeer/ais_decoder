@@ -80,29 +80,29 @@ class StaticAndVoyageRelatedData extends AISMessage {
 
   @override
   int get hashCode => Object.hashAll([
-    messageType,
-    mmsi,
-    repeatIndicator,
-    aisVersion,
-    imoNumber,
-    callSign,
-    vesselName,
-    vesselTypeInt,
-    vesselType,
-    dimensionBow,
-    dimensionStern,
-    dimensionPort,
-    dimensionStarboard,
-    epfdFixType,
-    etaMonth,
-    etaDay,
-    etaHour,
-    etaMinute,
-    draught,
-    destination,
-    dte,
-    spare,
-  ]);
+        messageType,
+        mmsi,
+        repeatIndicator,
+        aisVersion,
+        imoNumber,
+        callSign,
+        vesselName,
+        vesselTypeInt,
+        vesselType,
+        dimensionBow,
+        dimensionStern,
+        dimensionPort,
+        dimensionStarboard,
+        epfdFixType,
+        etaMonth,
+        etaDay,
+        etaHour,
+        etaMinute,
+        draught,
+        destination,
+        dte,
+        spare,
+      ]);
 
   @override
   String toString() =>
@@ -112,11 +112,12 @@ class StaticAndVoyageRelatedData extends AISMessage {
       'Dimensions: ${dimensionBow}m bow/${dimensionStern}m stern/${dimensionPort}m port/${dimensionStarboard}m starboard, '
       'EPFD Fix Type: $epfdFixType, ETA: $etaMonth/$etaDay $etaHour:$etaMinute, '
       'Draught: ${draught}m, Destination: $destination, DTE: $dte, Spare: $spare)';
-  
+
   //endregion
 
   factory StaticAndVoyageRelatedData.fromBinary(String binaryInput) {
-    String binary = binaryInput.padRight(424, '0'); // add padding of zeroes if second part got truncated for some f*ck-all reasons...
+    String binary = binaryInput.padRight(424,
+        '0'); // add padding of zeroes if second part got truncated for some f*ck-all reasons...
 
     // common
     int messageType = int.parse(binary.substring(0, 6), radix: 2);
@@ -149,7 +150,8 @@ class StaticAndVoyageRelatedData extends AISMessage {
     int dimensionStern = int.parse(dimensionSternBin, radix: 2);
     int dimensionPort = int.parse(dimensionPortBin, radix: 2);
     int dimensionStarboard = int.parse(dimensionStarboardBin, radix: 2);
-    String positionFixType = BinaryConverter().getEPFDFixType(positionFixTypeBin);
+    String positionFixType =
+        BinaryConverter().getEPFDFixType(positionFixTypeBin);
     int etaMonth = int.parse(etaMonthBin, radix: 2);
     int etaDay = int.parse(etaDayBin, radix: 2);
     int etaHour = int.parse(etaHourBin, radix: 2);
@@ -160,33 +162,33 @@ class StaticAndVoyageRelatedData extends AISMessage {
     int spare = int.parse(binary.substring(423, 424), radix: 2);
 
     return StaticAndVoyageRelatedData(
-      messageType: messageType,
-      mmsi: mmsi,
-      repeatIndicator: repeatIndicator,
-      aisVersion: aisVersion,
-      imoNumber: imoNumber,
-      callSign: callSign,
-      vesselName: vesselName,
-      vesselType: vesselType,
-      vesselTypeInt: int.parse(vesselTypeBin, radix: 2),
-      dimensionBow: dimensionBow,
-      dimensionStern: dimensionStern,
-      dimensionPort: dimensionPort,
-      dimensionStarboard: dimensionStarboard,
-      epfdFixType: positionFixType,
-      etaMonth: etaMonth,
-      etaDay: etaDay,
-      etaHour: etaHour,
-      etaMinute: etaMinute,
-      draught: draught,
-      destination: destination,
-      dte: dteReady,
-      spare: spare
-    );
+        messageType: messageType,
+        mmsi: mmsi,
+        repeatIndicator: repeatIndicator,
+        aisVersion: aisVersion,
+        imoNumber: imoNumber,
+        callSign: callSign,
+        vesselName: vesselName,
+        vesselType: vesselType,
+        vesselTypeInt: int.parse(vesselTypeBin, radix: 2),
+        dimensionBow: dimensionBow,
+        dimensionStern: dimensionStern,
+        dimensionPort: dimensionPort,
+        dimensionStarboard: dimensionStarboard,
+        epfdFixType: positionFixType,
+        etaMonth: etaMonth,
+        etaDay: etaDay,
+        etaHour: etaHour,
+        etaMinute: etaMinute,
+        draught: draught,
+        destination: destination,
+        dte: dteReady,
+        spare: spare);
   }
 
   factory StaticAndVoyageRelatedData.fromEncoded(String encoded) {
-    String binary = encoded.padRight(424, '0'); // add padding of zeroes if second part got truncated for some f*ck-all reasons...
+    String binary = encoded.padRight(424,
+        '0'); // add padding of zeroes if second part got truncated for some f*ck-all reasons...
 
     // common
     int messageType = getUintDirect(binary, 0, 6);
@@ -210,22 +212,25 @@ class StaticAndVoyageRelatedData extends AISMessage {
     // int destinationBin = getUintDirect(binary, 302, 422);
 
     // conversion to actually readable data
-    int aisVersion = getUintDirect(binary,  38, 40);
-    int imoNumber = getUintDirect(binary,  40, 70);
-    String callSign = BinaryConverter().getVesselCallSignDirect(binary, 70, 112);
+    int aisVersion = getUintDirect(binary, 38, 40);
+    int imoNumber = getUintDirect(binary, 40, 70);
+    String callSign =
+        BinaryConverter().getVesselCallSignDirect(binary, 70, 112);
     String vesselName = BinaryConverter().getVesselNameDirect(binary, 112, 232);
     String vesselType = BinaryConverter().getVesselTypeDirect(vesselTypeBin);
     int dimensionBow = dimensionBowBin;
     int dimensionStern = dimensionSternBin;
     int dimensionPort = dimensionPortBin;
     int dimensionStarboard = dimensionStarboardBin;
-    String positionFixType = BinaryConverter().getEPFDFixTypeDirect(positionFixTypeBin);
+    String positionFixType =
+        BinaryConverter().getEPFDFixTypeDirect(positionFixTypeBin);
     int etaMonth = etaMonthBin;
     int etaDay = etaDayBin;
     int etaHour = etaHourBin;
     int etaMinute = etaMinuteBin;
     double draught = BinaryConverter().calculateDraughtDirect(draughtBin);
-    String destination = BinaryConverter().getDestinationDirect(binary, 302, 422);
+    String destination =
+        BinaryConverter().getDestinationDirect(binary, 302, 422);
     int dteReady = getUintDirect(binary, 422, 423);
     int spare = getUintDirect(binary, 423, 424);
 
@@ -251,7 +256,6 @@ class StaticAndVoyageRelatedData extends AISMessage {
         draught: draught,
         destination: destination,
         dte: dteReady,
-        spare: spare
-    );
+        spare: spare);
   }
 }
