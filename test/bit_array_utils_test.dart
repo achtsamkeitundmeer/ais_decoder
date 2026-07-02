@@ -120,6 +120,16 @@ void main() {
       expect(() => asSignedInt(bitArray, 10, 15), throwsRangeError);
     });
   });
+
+  group('asString', () {
+    final bitArray = decodeToBitArray(kExamplePayload);
+    test('call sign', () {
+      expect(asString(bitArray, 70, 112), '3FME7  ');
+    });
+    test('vesselName', () {
+      expect(asString(bitArray, 112, 232), 'KEREM KARABEKIR     ');
+    });
+  });
 }
 
 BoolList toBoolList(String binaryString) {
@@ -131,4 +141,5 @@ BoolList toBoolList(String binaryString) {
   return bitArray;
 }
 
-const kExample = '!AIVDM,1,1,,B,B3`e<W@01hJMcvUIe3rWSwnUoP06,0*48';
+const kExamplePayload =
+    '55QaC@42@>Uw<HlGN20dE8Dn0d5848DdU:222216:PC6:5eW0?AiD52H8888';

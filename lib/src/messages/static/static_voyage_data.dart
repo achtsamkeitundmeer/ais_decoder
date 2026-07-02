@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 
 import '../../../ais_decoder.dart';
 import '../../utils/binary_conversion.dart';
+import '../../utils/bit_array_utils.dart';
 
 class StaticAndVoyageRelatedData extends AISMessage {
   final int aisVersion;
@@ -261,6 +262,68 @@ class StaticAndVoyageRelatedData extends AISMessage {
   }
 
   factory StaticAndVoyageRelatedData.fromBitArray(BoolList bitArray) {
-    throw UnimplementedError();
+    if (bitArray.length < 424) {
+      // add padding of zeroes if second part got truncated for some reason.
+      final tmp = BoolList.of(bitArray, growable: true);
+      tmp.length = 424;
+      bitArray = tmp;
+    }
+
+    // common
+    int messageType = asInt(bitArray, 0, 6);
+    int repeatIndicator = asInt(bitArray, 6, 8);
+    int mmsi = asInt(bitArray, 8, 38);
+
+    // binary ranges specific to type 5
+    int aisVersion = asInt(bitArray, 38, 40);
+    int imoNumber = asInt(bitArray, 40, 70);
+
+    String callSign = asString(bitArray, 70, 112);
+    String vesselName = asString(bitArray, 112, 232);
+    int vesselType = asInt(bitArray, 232, 240);
+    int dimensionBow = asInt(bitArray, 240, 249);
+    int dimensionStern = asInt(bitArray, 249, 258);
+    int dimensionPort = asInt(bitArray, 258, 264);
+    int dimensionStarboard = asInt(bitArray, 264, 270);
+    int positionFixType = asInt(bitArray, 270, 274);
+    int etaMonth = asInt(bitArray, 274, 278);
+    int etaDay = asInt(bitArray, 278, 283);
+    int etaHour = asInt(bitArray, 283, 288);
+    int etaMinute = asInt(bitArray, 288, 294);
+    int draughtRaw = asInt(bitArray, 294, 302);
+    String destination = asString(bitArray, 302, 422);
+    int dteReady = asInt(bitArray, 422, 423);
+    int spare = asInt(bitArray, 423, 424);
+
+    // conversion to actually readable data
+    String vesselTypeString = BinaryConverter.getVesselTypeString(vesselType);
+    String positionFixTypeString =
+        BinaryConverter.getEPFDFixTypeString(positionFixType);
+    double draught = BinaryConverter.calculateDraughtFromRaw(draughtRaw);
+
+    return StaticAndVoyageRelatedData(
+      messageType: messageType,
+      mmsi: mmsi,
+      repeatIndicator: repeatIndicator,
+      aisVersion: aisVersion,
+      imoNumber: imoNumber,
+      callSign: callSign,
+      vesselName: vesselName,
+      vesselType: vesselTypeString,
+      vesselTypeInt: vesselType,
+      dimensionBow: dimensionBow,
+      dimensionStern: dimensionStern,
+      dimensionPort: dimensionPort,
+      dimensionStarboard: dimensionStarboard,
+      epfdFixType: positionFixTypeString,
+      etaMonth: etaMonth,
+      etaDay: etaDay,
+      etaHour: etaHour,
+      etaMinute: etaMinute,
+      draught: draught,
+      destination: destination,
+      dte: dteReady,
+      spare: spare,
+    );
   }
 }

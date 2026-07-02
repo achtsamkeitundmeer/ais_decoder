@@ -180,35 +180,35 @@ class PositionMessage extends AISMessage {
     // binary ranges specific to type 1-3
     int navigationStatus = asInt(bitArray, 38, 42);
     int rateOfTurnRaw = asInt(bitArray, 42, 50);
+    int speedDecoded = asInt(bitArray, 50, 60);
+    int rawLongitude = asSignedInt(bitArray, 61, 89);
+    int rawLatitude = asSignedInt(bitArray, 89, 116);
+    int courseDecoded = asInt(bitArray, 116, 128);
+    int headingDecoded = asInt(bitArray, 128, 137);
+    int timestamp = asInt(bitArray, 137, 143);
+    int maneuverIndicator = asInt(bitArray, 143, 145);
+    int raimEnabled = asInt(bitArray, 148, 149);
 
     // conversion to actually readable data
     String navigationStatusString =
         BinaryConverter.navigationStatusString(navigationStatus);
-    int rawLongitude = asSignedInt(bitArray, 61, 89);
     const int nrLongitudeBits = 89 - 61;
     double? longitude = CoordinateUtils()
         .calculateLongitudeDirect(rawLongitude, nrLongitudeBits);
-    int rawLatitude = asSignedInt(bitArray, 89, 116);
     const int nrLatitudeBits = 116 - 89;
     double? latitude =
         CoordinateUtils().calculateLatitudeDirect(rawLatitude, nrLatitudeBits);
-    int maneuverIndicator = asInt(bitArray, 143, 145);
     String? maneuverIndicatorString =
         BinaryConverter.maneuverIndicatorString(maneuverIndicator);
-    int speedDecoded = asInt(bitArray, 50, 60);
     double? speed =
         0 <= speedDecoded && speedDecoded <= 1022 ? speedDecoded / 10.0 : null;
-    int courseDecoded = asInt(bitArray, 116, 128);
     double? course = 0 <= courseDecoded && courseDecoded < 3600
         ? courseDecoded / 10.0
         : null;
     double rateOfTurn = BinaryConverter().getRateOfTurnDirect(rateOfTurnRaw);
-    int headingDecoded = asInt(bitArray, 128, 137);
     double? heading = 0 <= headingDecoded && headingDecoded < 360
         ? headingDecoded.toDouble()
         : null;
-    int timestamp = asInt(bitArray, 137, 143);
-    int raimEnabled = asInt(bitArray, 148, 149);
 
     return PositionMessage(
       messageType: messageType,

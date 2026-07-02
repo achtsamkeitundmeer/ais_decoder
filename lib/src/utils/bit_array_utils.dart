@@ -61,6 +61,30 @@ int asSignedInt(BoolList bitArray, int start, int end) {
   return value;
 }
 
+/// Decodes the bits from start (inclusive) to end (exclusive) as
+/// AIS-encoded characters, six bits each. The number of bits must be
+/// a multiple of 6.
+String asString(BoolList bitArray, int start, int end) {
+  if ((end - start) % 6 != 0) {
+    throw RangeError('Number of bits must be multiple of 6');
+  }
+
+  // AIS 6-bit ASCII character set (64 characters total)
+  const aisChars =
+      '@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_ !"#\$%&\'()*+,-./0123456789:;<=>?';
+
+  final buf = StringBuffer();
+  for (int i = start; i < end; i += 6) {
+    int decimalValue = asInt(bitArray, i, i + 6);
+    if (decimalValue >= 0 && decimalValue < aisChars.length) {
+      buf.write(aisChars[decimalValue]);
+    } else {
+      buf.write('@');
+    }
+  }
+  return buf.toString().replaceAll(RegExp(r'@+$'), '');
+}
+
 String bitArrayToString(BoolList bitArray) {
   final buf = StringBuffer();
   for (int i = 0; i < bitArray.length; ++i) {

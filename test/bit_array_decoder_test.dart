@@ -86,6 +86,106 @@ void main() {
       expect(typed.raimEnabled, 0);
     });
   });
+  group('Type 5', () {
+    test('example 1', () {
+      final field5 = kType5Example1Line1.split(',')[5];
+      final message = AISMessage.fromPayload(field5);
+      // TODO: combine with line 2 somehow.
+      expect(message, isNotNull);
+      expect(message.messageType, 5);
+      expect(message.mmsi, 370824000);
+      expect(message.repeatIndicator, 0);
+      expect(message, isA<StaticAndVoyageRelatedData>());
+      final typed = message as StaticAndVoyageRelatedData;
+      expect(typed.aisVersion, 1);
+      expect(typed.imoNumber, 9452127);
+      expect(typed.callSign, '3FME7  ');
+      expect(typed.vesselName, 'KEREM KARABEKIR     ');
+      expect(typed.vesselTypeInt, 70);
+      expect(typed.vesselType, 'Cargo, all ships of this type');
+      expect(typed.dimensionBow, 84);
+      expect(typed.dimensionStern, 19);
+      expect(typed.dimensionPort, 6);
+      expect(typed.dimensionStarboard, 10);
+      expect(typed.epfdFixType, 'GPS');
+      expect(typed.etaMonth, 6);
+      expect(typed.etaDay, 27);
+      expect(typed.etaHour, 7);
+      expect(typed.etaMinute, 0);
+      expect(typed.draught, 6.1);
+      expect(typed.destination, 'GEPTI     ');
+      expect(typed.dte, 0);
+      expect(typed.spare, 0);
+    });
+    test('example 2', () {
+      final field5 = kType5Example2Line1.split(',')[5];
+      final message = AISMessage.fromPayload(field5);
+      // TODO: combine with line 2 somehow.
+      expect(message, isNotNull);
+      expect(message.messageType, 5);
+      expect(message.mmsi, 237005900);
+      expect(message.repeatIndicator, 0);
+      expect(message, isA<StaticAndVoyageRelatedData>());
+      final typed = message as StaticAndVoyageRelatedData;
+      expect(typed.aisVersion, 0);
+      expect(typed.imoNumber, 6619762);
+      expect(typed.callSign, 'SV7235 ');
+      expect(typed.vesselName, 'NAFTILOS            ');
+      expect(typed.vesselTypeInt, 70);
+      expect(typed.vesselType, 'Cargo, all ships of this type');
+      expect(typed.dimensionBow, 55);
+      expect(typed.dimensionStern, 13);
+      expect(typed.dimensionPort, 8);
+      expect(typed.dimensionStarboard, 2);
+      expect(typed.epfdFixType, 'GPS');
+      expect(typed.etaMonth, 6);
+      expect(typed.etaDay, 20);
+      expect(typed.etaHour, 23);
+      expect(typed.etaMinute, 30);
+      expect(typed.draught, 4.6);
+      expect(typed.destination, 'AEGINA LEL');
+      expect(typed.dte, 0);
+      expect(typed.spare, 0);
+    });
+  });
+  group('Type 18', () {
+    test('example 1', () {
+      final field5 = kType18Example1.split(',')[5];
+      final message = AISMessage.fromPayload(field5);
+      expect(message, isNotNull);
+      expect(message.messageType, 18);
+      expect(message.mmsi, 244010141);
+      expect(message.repeatIndicator, 0);
+      expect(message, isA<StandardClassBCSPositionReport>());
+      final typed = message as StandardClassBCSPositionReport;
+      expect(typed.heading, isNull);
+      expect(typed.positionAccuracy, 0);
+      expect(typed.latitude, 37.760103);
+      expect(typed.longitude, 23.124475);
+      expect(typed.courseOverGround, 268.0);
+      expect(typed.raimFlag, 1);
+      expect(typed.speedOverGround, 0.7);
+      expect(typed.timestamp, 45);
+    });
+    test('example 2', () {
+      final field5 = kType18Example2.split(',')[5];
+      final message = AISMessage.fromPayload(field5);
+      expect(message, isNotNull);
+      expect(message.messageType, 18);
+      expect(message.mmsi, 275049210);
+      expect(message.repeatIndicator, 0);
+      expect(message, isA<StandardClassBCSPositionReport>());
+      final typed = message as StandardClassBCSPositionReport;
+      expect(typed.heading, isNull);
+      expect(typed.positionAccuracy, 1);
+      expect(typed.latitude, 37.762643);
+      expect(typed.longitude, 23.13048);
+      expect(typed.courseOverGround, isNull);
+      expect(typed.raimFlag, 1);
+      expect(typed.speedOverGround, 0.0);
+      expect(typed.timestamp, 55);
+    });
+  });
 }
 
 const kType1Example1 = '!AIVDM,1,1,,A,13lLUr02j01br3REUdh`eW3608Dn,0*52';

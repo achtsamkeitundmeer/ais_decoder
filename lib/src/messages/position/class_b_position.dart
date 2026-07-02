@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 
 import '../../../ais_decoder.dart';
+import '../../utils/bit_array_utils.dart';
 import '../../utils/coordinate_utils.dart';
 
 // ToDo: Implement missing 9 possibly sent data points!
@@ -82,6 +83,49 @@ class StandardClassBCSPositionReport extends AISMessage {
   }
 
   factory StandardClassBCSPositionReport.fromBitArray(BoolList bitArray) {
-    throw UnimplementedError();
+    // common
+    int messageType = asInt(bitArray, 0, 6);
+    int repeatIndicator = asInt(bitArray, 6, 8);
+    int mmsi = asInt(bitArray, 8, 38);
+
+    // binary ranges specific for type 18 Class B Position Report
+    int headingDecoded = asInt(bitArray, 124, 133);
+    int positionAccuracy = asInt(bitArray, 56, 57);
+    int rawLongitude = asSignedInt(bitArray, 57, 85);
+    int rawLatitude = asSignedInt(bitArray, 85, 112);
+    int courseDecoded = asInt(bitArray, 112, 124);
+    int raimFlag = asInt(bitArray, 147, 148);
+    int speedDecoded = asInt(bitArray, 46, 56);
+    int timestamp = asInt(bitArray, 133, 139);
+
+    // conversion to actually readable data
+    double? heading = 0 <= headingDecoded && headingDecoded < 360
+        ? headingDecoded.toDouble()
+        : null;
+    const int nrLongitudeBits = 85 - 57;
+    double? longitude = CoordinateUtils.calculateLongitudeFromRaw(
+        rawLongitude, nrLongitudeBits);
+    const int nrLatitudeBits = 112 - 85;
+    double? latitude =
+        CoordinateUtils.calculateLatitudeFromRaw(rawLatitude, nrLatitudeBits);
+    double? speed =
+        0 <= speedDecoded && speedDecoded <= 1022 ? speedDecoded / 10.0 : null;
+    double? course = 0 <= courseDecoded && courseDecoded < 3600
+        ? courseDecoded / 10.0
+        : null;
+
+    return StandardClassBCSPositionReport(
+      messageType: messageType,
+      mmsi: mmsi,
+      repeatIndicator: repeatIndicator,
+      heading: heading,
+      positionAccuracy: positionAccuracy,
+      longitude: longitude,
+      latitude: latitude,
+      courseOverGround: course,
+      raimFlag: raimFlag,
+      speedOverGround: speed,
+      timestamp: timestamp,
+    );
   }
 }
