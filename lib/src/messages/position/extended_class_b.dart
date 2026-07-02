@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 
 import '../../../ais_decoder.dart';
 import '../../utils/binary_conversion.dart';
+import '../../utils/bit_array_utils.dart';
 import '../../utils/coordinate_utils.dart';
 
 /// ## Extended Class B CS Position Report
@@ -147,6 +148,86 @@ class ExtendedClassBCSPositionReport extends AISMessage {
   }
 
   factory ExtendedClassBCSPositionReport.fromBitArray(BoolList bitArray) {
-    throw UnimplementedError();
+    // common
+    int messageType = asInt(bitArray, 0, 6);
+    int repeatIndicator = asInt(bitArray, 6, 8);
+    int mmsi = asInt(bitArray, 8, 38);
+
+    // binary ranges specific for type 19 Class B Position Report
+    int speedDecoded = asInt(bitArray, 46, 56);
+    int positionAccuracy = asInt(bitArray, 56, 57);
+    int rawLongitude = asSignedInt(bitArray, 57, 85);
+    int rawLatitude = asSignedInt(bitArray, 85, 112);
+    int courseDecoded = asInt(bitArray, 112, 124);
+    int headingDecoded = asInt(bitArray, 124, 133);
+    int timestamp = asInt(bitArray, 133, 139);
+    int regionalReservedDecoded = asInt(bitArray, 139, 143);
+    String vesselName = asString(bitArray, 143, 263);
+    int vesselType = asInt(bitArray, 263, 271);
+    int dimensionBow = asInt(bitArray, 271, 280);
+    int dimensionStern = asInt(bitArray, 280, 289);
+    int dimensionPort = asInt(bitArray, 289, 295);
+    int dimensionStarboard = asInt(bitArray, 295, 301);
+    int positionFixType = asInt(bitArray, 301, 305);
+    int raimFlag = asInt(bitArray, 305, 306);
+    int dteReady =
+        asInt(bitArray, 306, 307); // 0 = ready, 1 = not ready (default)
+    int assignedMode = asInt(bitArray, 307, 308); // See IALA for details.
+    int spare = asInt(bitArray, 308, 312); // unused and should be 0.
+
+    // conversion to actually readable data
+    double speed = speedDecoded / 10.0;
+    // TODO: make speed optional to respect invalid values:
+    // double? speed =
+    // 0 <= speedDecoded && speedDecoded <= 1022 ? speedDecoded / 10.0 : null;
+    const int nrLongitudeBits = 85 - 57;
+    double? longitude = CoordinateUtils.calculateLongitudeFromRaw(
+        rawLongitude, nrLongitudeBits);
+    const int nrLatitudeBits = 112 - 85;
+    double? latitude =
+        CoordinateUtils.calculateLatitudeFromRaw(rawLatitude, nrLatitudeBits);
+    double course = courseDecoded / 10.0;
+    // TODO: make course optional to respect invalid values:
+    // double? course = 0 <= courseDecoded && courseDecoded < 3600
+    //     ? courseDecoded / 10.0
+    //     : null;
+
+    double heading = headingDecoded.toDouble();
+    // TODO: make heading optional to respect invalid values:
+    // double? heading = 0 <= headingDecoded && headingDecoded < 360
+    //     ? headingDecoded.toDouble()
+    //     : null;
+
+    double regionalReserved =
+        regionalReservedDecoded.toDouble(); // Uninterpreted
+    String vesselTypeString = BinaryConverter.getVesselTypeString(vesselType);
+    String positionFixTypeString =
+        BinaryConverter.getEPFDFixTypeString(positionFixType);
+
+    return ExtendedClassBCSPositionReport(
+      messageType: messageType,
+      mmsi: mmsi,
+      repeatIndicator: repeatIndicator,
+      speedOverGround: speed,
+      positionAccuracy: positionAccuracy,
+      longitude: longitude,
+      latitude: latitude,
+      courseOverGround: course,
+      heading: heading,
+      timestamp: timestamp,
+      regionalReserved: regionalReserved,
+      vesselName: vesselName,
+      vesselTypeInt: vesselType,
+      vesselType: vesselTypeString,
+      dimensionBow: dimensionBow,
+      dimensionStern: dimensionStern,
+      dimensionPort: dimensionPort,
+      dimensionStarboard: dimensionStarboard,
+      epfdFixType: positionFixTypeString,
+      raimFlag: raimFlag,
+      dte: dteReady,
+      assignedMode: assignedMode,
+      spare: spare,
+    );
   }
 }

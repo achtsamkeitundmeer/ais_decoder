@@ -89,14 +89,14 @@ class StandardClassBCSPositionReport extends AISMessage {
     int mmsi = asInt(bitArray, 8, 38);
 
     // binary ranges specific for type 18 Class B Position Report
-    int headingDecoded = asInt(bitArray, 124, 133);
+    int speedDecoded = asInt(bitArray, 46, 56);
     int positionAccuracy = asInt(bitArray, 56, 57);
     int rawLongitude = asSignedInt(bitArray, 57, 85);
     int rawLatitude = asSignedInt(bitArray, 85, 112);
     int courseDecoded = asInt(bitArray, 112, 124);
-    int raimFlag = asInt(bitArray, 147, 148);
-    int speedDecoded = asInt(bitArray, 46, 56);
+    int headingDecoded = asInt(bitArray, 124, 133);
     int timestamp = asInt(bitArray, 133, 139);
+    int raimFlag = asInt(bitArray, 147, 148);
 
     // conversion to actually readable data
     double? heading = 0 <= headingDecoded && headingDecoded < 360

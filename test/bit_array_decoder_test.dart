@@ -186,6 +186,9 @@ void main() {
       expect(typed.timestamp, 55);
     });
   });
+  // TODO: add unit tests for Type 19 messages.
+  // TODO: add unit tests for Type 27 messages.
+  // TODO: add unit tests for Type 4 messages.
 }
 
 const kType1Example1 = '!AIVDM,1,1,,A,13lLUr02j01br3REUdh`eW3608Dn,0*52';

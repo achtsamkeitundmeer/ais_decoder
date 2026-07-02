@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 
 import '../../../ais_decoder.dart';
 import '../../utils/binary_conversion.dart';
+import '../../utils/bit_array_utils.dart';
 import '../../utils/coordinate_utils.dart';
 
 class LongRangeAISBroadcastMessage extends AISMessage {
@@ -76,6 +77,45 @@ class LongRangeAISBroadcastMessage extends AISMessage {
   }
 
   factory LongRangeAISBroadcastMessage.fromBitArray(BoolList bitArray) {
-    throw UnimplementedError();
+    // common
+    int messageType = asInt(bitArray, 0, 6);
+    int repeatIndicator = asInt(bitArray, 6, 8);
+    int mmsi = asInt(bitArray, 8, 38);
+
+    // binary ranges specific to type 27
+    int raimEnabled = asInt(bitArray, 39, 40);
+    int navigationStatus = asInt(bitArray, 40, 44);
+    int rawLongitude = asSignedInt(bitArray, 44, 62); // Type 27 position
+    int rawLatitude = asSignedInt(bitArray, 62, 79); // Type 27 position
+    int speedDecoded = asInt(bitArray, 79, 85);
+    int courseDecoded = asInt(bitArray, 85, 94);
+    int gnssStatus = asInt(bitArray, 94, 95);
+    int spare = asInt(bitArray, 95, 96);
+
+    // conversion to actually readable data
+    String navigationStatusString =
+        BinaryConverter.navigationStatusString(navigationStatus);
+    const int nrLongitudeBits = 62 - 44;
+    double? longitude = CoordinateUtils.calculateLongitudeFromRaw(
+        rawLongitude, nrLongitudeBits);
+    const int nrLatitudeBits = 79 - 62;
+    double? latitude =
+        CoordinateUtils.calculateLatitudeFromRaw(rawLatitude, nrLatitudeBits);
+    double speed = speedDecoded / 10.0;
+    double course = courseDecoded / 10.0;
+
+    return LongRangeAISBroadcastMessage(
+      messageType: messageType,
+      mmsi: mmsi,
+      repeatIndicator: repeatIndicator,
+      navigationStatus: navigationStatusString,
+      latitude: latitude,
+      longitude: longitude,
+      speedOverGround: speed,
+      courseOverGround: course,
+      raimEnabled: raimEnabled,
+      gnssPositionStatus: gnssStatus,
+      spare: spare,
+    );
   }
 }

@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 
 import '../../../ais_decoder.dart';
 import '../../utils/binary_conversion.dart';
+import '../../utils/bit_array_utils.dart';
 import '../../utils/coordinate_utils.dart';
 
 class BaseStationReport extends AISMessage {
@@ -99,6 +100,52 @@ class BaseStationReport extends AISMessage {
   }
 
   factory BaseStationReport.fromBitArray(BoolList bitArray) {
-    throw UnimplementedError();
+    // common
+    int messageType = asInt(bitArray, 0, 6);
+    int repeatIndicator = asInt(bitArray, 6, 8);
+    int mmsi = asInt(bitArray, 8, 38);
+
+    // binary ranges specific to type 4
+    int year = asInt(bitArray, 38, 52);
+    int month = asInt(bitArray, 52, 56);
+    int day = asInt(bitArray, 56, 61);
+    int hour = asInt(bitArray, 61, 66);
+    int minute = asInt(bitArray, 66, 72);
+    int second = asInt(bitArray, 72, 78);
+    int accuracy = asInt(bitArray, 78, 79); // as bool
+    int rawLongitude = asSignedInt(bitArray, 79, 107); // Type 4 position
+    int rawLatitude = asSignedInt(bitArray, 107, 134); // Type 4 position
+    int epfd = asInt(bitArray, 134, 138);
+    int spare = asInt(bitArray, 138, 148);
+    int raimFlag = asInt(bitArray, 148, 149);
+    int sotdmaState = asInt(bitArray, 149, 168);
+
+    // conversion to actually readable data
+    const int nrLongitudeBits = 107 - 79;
+    double? longitude = CoordinateUtils.calculateLongitudeFromRaw(
+        rawLongitude, nrLongitudeBits);
+    const int nrLatitudeBits = 134 - 107;
+    double? latitude =
+        CoordinateUtils.calculateLatitudeFromRaw(rawLatitude, nrLatitudeBits);
+    String positionFixType = BinaryConverter.getEPFDFixTypeString(epfd);
+
+    return BaseStationReport(
+      messageType: messageType,
+      mmsi: mmsi,
+      repeatIndicator: repeatIndicator,
+      year: year,
+      month: month,
+      day: day,
+      hour: hour,
+      minute: minute,
+      second: second,
+      accuracy: accuracy,
+      longitude: longitude,
+      latitude: latitude,
+      epfdFixType: positionFixType,
+      spare: spare,
+      raim: raimFlag,
+      sotdmaState: sotdmaState,
+    );
   }
 }
