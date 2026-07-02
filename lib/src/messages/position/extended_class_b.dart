@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 import '../../../ais_decoder.dart';
 import '../../utils/binary_conversion.dart';
 import '../../utils/coordinate_utils.dart';
@@ -142,5 +144,9 @@ class ExtendedClassBCSPositionReport extends AISMessage {
       assignedMode: assignedMode,
       spare: spare,
     );
+  }
+
+  factory ExtendedClassBCSPositionReport.fromBitArray(BoolList bitArray) {
+    throw UnimplementedError();
   }
 }

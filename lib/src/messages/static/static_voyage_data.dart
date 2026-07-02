@@ -1,4 +1,5 @@
 import 'package:ais_decoder/src/utils/getInt.dart';
+import 'package:collection/collection.dart';
 
 import '../../../ais_decoder.dart';
 import '../../utils/binary_conversion.dart';
@@ -257,5 +258,9 @@ class StaticAndVoyageRelatedData extends AISMessage {
         destination: destination,
         dte: dteReady,
         spare: spare);
+  }
+
+  factory StaticAndVoyageRelatedData.fromBitArray(BoolList bitArray) {
+    throw UnimplementedError();
   }
 }

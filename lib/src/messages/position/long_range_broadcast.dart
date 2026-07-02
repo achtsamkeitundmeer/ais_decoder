@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 import '../../../ais_decoder.dart';
 import '../../utils/binary_conversion.dart';
 import '../../utils/coordinate_utils.dart';
@@ -71,5 +73,9 @@ class LongRangeAISBroadcastMessage extends AISMessage {
       gnssPositionStatus: gnssStatus,
       spare: spare,
     );
+  }
+
+  factory LongRangeAISBroadcastMessage.fromBitArray(BoolList bitArray) {
+    throw UnimplementedError();
   }
 }

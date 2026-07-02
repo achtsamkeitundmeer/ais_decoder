@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 import '../../../ais_decoder.dart';
 import '../../utils/coordinate_utils.dart';
 
@@ -56,9 +58,8 @@ class StandardClassBCSPositionReport extends AISMessage {
     double? longitude = CoordinateUtils().calculateLongitude(longitudeBin);
     double? latitude = CoordinateUtils().calculateLatitude(latitudeBin);
     int speedDecoded = int.parse(speedBin, radix: 2);
-    double? speed = 0 <= speedDecoded && speedDecoded <= 1022
-        ? speedDecoded / 10.0
-        : null;
+    double? speed =
+        0 <= speedDecoded && speedDecoded <= 1022 ? speedDecoded / 10.0 : null;
     int courseDecoded = int.parse(courseBin, radix: 2);
     double? course = 0 <= courseDecoded && courseDecoded < 3600
         ? courseDecoded / 10.0
@@ -78,5 +79,9 @@ class StandardClassBCSPositionReport extends AISMessage {
       speedOverGround: speed,
       timestamp: timestamp,
     );
+  }
+
+  factory StandardClassBCSPositionReport.fromBitArray(BoolList bitArray) {
+    throw UnimplementedError();
   }
 }

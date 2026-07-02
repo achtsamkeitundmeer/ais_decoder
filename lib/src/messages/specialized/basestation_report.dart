@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 import '../../../ais_decoder.dart';
 import '../../utils/binary_conversion.dart';
 import '../../utils/coordinate_utils.dart';
@@ -94,5 +96,9 @@ class BaseStationReport extends AISMessage {
       raim: raimFlag,
       sotdmaState: sotdmaState,
     );
+  }
+
+  factory BaseStationReport.fromBitArray(BoolList bitArray) {
+    throw UnimplementedError();
   }
 }

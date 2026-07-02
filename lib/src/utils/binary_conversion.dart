@@ -386,7 +386,7 @@ class BinaryConverter {
   ///Get the EPDF Fix Type.
   @Deprecated("Superseded by getEPFDFixTypeDirect")
   String getEPFDFixType(String binaryEPFDFixType) {
-   return getEPFDFixTypeDirect(int.parse(binaryEPFDFixType, radix: 2));
+    return getEPFDFixTypeDirect(int.parse(binaryEPFDFixType, radix: 2));
   }
 
   ///Get the EPDF Fix Type.
@@ -672,7 +672,7 @@ class BinaryConverter {
     }
   }
   //endregion
-  
+
   //region Maneuver Indicator Info
   ///Convert the Maneuver Indicator to a String which identifies the current maneuver of the vessel to interpret later or show the client.
   @Deprecated("Superseded by maneuverIndicatorInfoDirect")
@@ -686,7 +686,7 @@ class BinaryConverter {
       default: return "Unknown";
     }
   }
-  
+
   ///Convert the Maneuver Indicator to a String which identifies the current maneuver of the vessel to interpret later or show the client.
   String? maneuverIndicatorInfoDirect(int maneuverIndicator) {
     switch(maneuverIndicator) {
@@ -702,9 +702,9 @@ class BinaryConverter {
   ///Check if RAIM (Receiver Autonomous Integrity Monitoring) is enabled.
   @Deprecated("Superseded by RAIMInfoDirect")
   String? RAIMInfo(String binaryRAIMFlag) {
-   return RAIMInfoDirect(int.parse(binaryRAIMFlag, radix: 2));
+    return RAIMInfoDirect(int.parse(binaryRAIMFlag, radix: 2));
   }
-  
+
   ///Check if RAIM (Receiver Autonomous Integrity Monitoring) is enabled.
   String? RAIMInfoDirect(int RAIMFlag) {
     if(RAIMFlag == 0) {
@@ -716,6 +716,6 @@ class BinaryConverter {
       return "Unknown (Please Contact: )";
     }
   }
-  //endregion
+//endregion
 
 }
