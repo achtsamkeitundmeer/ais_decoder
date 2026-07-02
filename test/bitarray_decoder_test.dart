@@ -1,5 +1,5 @@
 import 'package:ais_decoder/src/utils/convert_char_to_bin.dart';
-import 'package:bit_array/bit_array.dart';
+import 'package:collection/collection.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -55,10 +55,11 @@ void main() {
       final String binaryString = makeBinaryString(encoded);
       print('Binary string: $binaryString');
       expect(binaryString.length, 168);
-      final BitArray bitArray = decodeToBitArray(encoded);
+      final BoolList bitArray = decodeToBitArray(encoded);
       final String bitArrayAsString = bitArrayToString(bitArray);
       print('Bit array:     $bitArrayAsString');
-      expect(bitArrayAsString.substring(0, 168), equals(binaryString));
+      expect(bitArrayAsString.length, 168);
+      expect(bitArrayAsString, equals(binaryString));
     });
   });
 
@@ -101,9 +102,9 @@ String makeBinaryString(String encoded) {
   return binary;
 }
 
-BitArray decodeToBitArray(String encoded) {
+BoolList decodeToBitArray(String encoded) {
   final bitArrayLength = encoded.length * 6;
-  final bitArray = BitArray(bitArrayLength);
+  final bitArray = BoolList(bitArrayLength);
   for (int i = 0; i < encoded.length; ++i) {
     final bitOffset = 6 * i + 5;
     int asciiValue = encoded.codeUnitAt(i);
@@ -123,7 +124,7 @@ bool isBitSet(int value, int bitIndex) {
   return (value & (1 << bitIndex)) != 0;
 }
 
-String bitArrayToString(BitArray bitArray) {
+String bitArrayToString(BoolList bitArray) {
   final buf = StringBuffer();
   for (int i = 0; i < bitArray.length; ++i) {
     buf.write(bitArray[i] ? '1' : '0');
