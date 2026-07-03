@@ -1,5 +1,7 @@
 import 'package:ais_decoder/ais_decoder.dart';
+import 'package:ais_decoder/src/utils/bit_array_utils.dart';
 import 'package:ais_decoder/src/utils/getInt.dart';
+import 'package:collection/collection.dart';
 
 import 'src/utils/convert_char_to_bin.dart';
 import 'src/utils/debug_prints.dart';

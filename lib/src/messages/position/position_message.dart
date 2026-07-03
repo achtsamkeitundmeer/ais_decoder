@@ -190,8 +190,8 @@ class PositionMessage extends AISMessage {
     int raimEnabled = asInt(bitArray, 148, 149);
 
     // conversion to actually readable data
-    String navigationStatusString =
-        BinaryConverter.navigationStatusString(navigationStatus);
+    String? navigationStatusString =
+        BinaryConverter().navigationStatusInfoDirect(navigationStatus);
     const int nrLongitudeBits = 89 - 61;
     double? longitude = CoordinateUtils()
         .calculateLongitudeDirect(rawLongitude, nrLongitudeBits);
@@ -199,7 +199,7 @@ class PositionMessage extends AISMessage {
     double? latitude =
         CoordinateUtils().calculateLatitudeDirect(rawLatitude, nrLatitudeBits);
     String? maneuverIndicatorString =
-        BinaryConverter.maneuverIndicatorString(maneuverIndicator);
+        BinaryConverter().maneuverIndicatorInfoDirect(maneuverIndicator);
     double? speed =
         0 <= speedDecoded && speedDecoded <= 1022 ? speedDecoded / 10.0 : null;
     double? course = 0 <= courseDecoded && courseDecoded < 3600
@@ -214,12 +214,12 @@ class PositionMessage extends AISMessage {
       messageType: messageType,
       mmsi: mmsi,
       repeatIndicator: repeatIndicator,
-      navigationStatus: navigationStatusString,
+      navigationStatus: navigationStatusString ?? '',
       latitude: latitude,
       longitude: longitude,
       speedOverGround: speed,
       courseOverGround: course,
-      maneuverIndicator: maneuverIndicatorString,
+      maneuverIndicator: maneuverIndicatorString ?? '',
       heading: heading,
       rateOfTurn: rateOfTurn,
       timestamp: timestamp,

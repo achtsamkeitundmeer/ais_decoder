@@ -122,12 +122,12 @@ class BaseStationReport extends AISMessage {
 
     // conversion to actually readable data
     const int nrLongitudeBits = 107 - 79;
-    double? longitude = CoordinateUtils.calculateLongitudeFromRaw(
-        rawLongitude, nrLongitudeBits);
+    double? longitude = CoordinateUtils()
+        .calculateLongitudeDirect(rawLongitude, nrLongitudeBits);
     const int nrLatitudeBits = 134 - 107;
     double? latitude =
-        CoordinateUtils.calculateLatitudeFromRaw(rawLatitude, nrLatitudeBits);
-    String positionFixType = BinaryConverter.getEPFDFixTypeString(epfd);
+        CoordinateUtils().calculateLatitudeDirect(rawLatitude, nrLatitudeBits);
+    String positionFixType = BinaryConverter().getEPFDFixTypeDirect(epfd);
 
     return BaseStationReport(
       messageType: messageType,

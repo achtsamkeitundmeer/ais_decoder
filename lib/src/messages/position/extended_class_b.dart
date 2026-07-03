@@ -181,11 +181,11 @@ class ExtendedClassBCSPositionReport extends AISMessage {
     // double? speed =
     // 0 <= speedDecoded && speedDecoded <= 1022 ? speedDecoded / 10.0 : null;
     const int nrLongitudeBits = 85 - 57;
-    double? longitude = CoordinateUtils.calculateLongitudeFromRaw(
-        rawLongitude, nrLongitudeBits);
+    double? longitude = CoordinateUtils()
+        .calculateLongitudeDirect(rawLongitude, nrLongitudeBits);
     const int nrLatitudeBits = 112 - 85;
     double? latitude =
-        CoordinateUtils.calculateLatitudeFromRaw(rawLatitude, nrLatitudeBits);
+        CoordinateUtils().calculateLatitudeDirect(rawLatitude, nrLatitudeBits);
     double course = courseDecoded / 10.0;
     // TODO: make course optional to respect invalid values:
     // double? course = 0 <= courseDecoded && courseDecoded < 3600
@@ -200,9 +200,9 @@ class ExtendedClassBCSPositionReport extends AISMessage {
 
     double regionalReserved =
         regionalReservedDecoded.toDouble(); // Uninterpreted
-    String vesselTypeString = BinaryConverter.getVesselTypeString(vesselType);
+    String vesselTypeString = BinaryConverter().getVesselTypeDirect(vesselType);
     String positionFixTypeString =
-        BinaryConverter.getEPFDFixTypeString(positionFixType);
+        BinaryConverter().getEPFDFixTypeDirect(positionFixType);
 
     return ExtendedClassBCSPositionReport(
       messageType: messageType,

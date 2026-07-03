@@ -296,10 +296,10 @@ class StaticAndVoyageRelatedData extends AISMessage {
     int spare = asInt(bitArray, 423, 424);
 
     // conversion to actually readable data
-    String vesselTypeString = BinaryConverter.getVesselTypeString(vesselType);
+    String vesselTypeString = BinaryConverter().getVesselTypeDirect(vesselType);
     String positionFixTypeString =
-        BinaryConverter.getEPFDFixTypeString(positionFixType);
-    double draught = BinaryConverter.calculateDraughtFromRaw(draughtRaw);
+        BinaryConverter().getEPFDFixTypeDirect(positionFixType);
+    double draught = BinaryConverter().calculateDraughtDirect(draughtRaw);
 
     return StaticAndVoyageRelatedData(
       messageType: messageType,

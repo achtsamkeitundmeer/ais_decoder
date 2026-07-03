@@ -93,14 +93,14 @@ class LongRangeAISBroadcastMessage extends AISMessage {
     int spare = asInt(bitArray, 95, 96);
 
     // conversion to actually readable data
-    String navigationStatusString =
-        BinaryConverter.navigationStatusString(navigationStatus);
+    String? navigationStatusString =
+        BinaryConverter().navigationStatusInfoDirect(navigationStatus);
     const int nrLongitudeBits = 62 - 44;
-    double? longitude = CoordinateUtils.calculateLongitudeFromRaw(
-        rawLongitude, nrLongitudeBits);
+    double? longitude = CoordinateUtils()
+        .calculateLongitudeDirect(rawLongitude, nrLongitudeBits);
     const int nrLatitudeBits = 79 - 62;
     double? latitude =
-        CoordinateUtils.calculateLatitudeFromRaw(rawLatitude, nrLatitudeBits);
+        CoordinateUtils().calculateLatitudeDirect(rawLatitude, nrLatitudeBits);
     double speed = speedDecoded / 10.0;
     double course = courseDecoded / 10.0;
 
@@ -108,7 +108,7 @@ class LongRangeAISBroadcastMessage extends AISMessage {
       messageType: messageType,
       mmsi: mmsi,
       repeatIndicator: repeatIndicator,
-      navigationStatus: navigationStatusString,
+      navigationStatus: navigationStatusString ?? '',
       latitude: latitude,
       longitude: longitude,
       speedOverGround: speed,

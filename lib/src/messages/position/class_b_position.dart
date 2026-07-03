@@ -103,11 +103,11 @@ class StandardClassBCSPositionReport extends AISMessage {
         ? headingDecoded.toDouble()
         : null;
     const int nrLongitudeBits = 85 - 57;
-    double? longitude = CoordinateUtils.calculateLongitudeFromRaw(
-        rawLongitude, nrLongitudeBits);
+    double? longitude = CoordinateUtils()
+        .calculateLongitudeDirect(rawLongitude, nrLongitudeBits);
     const int nrLatitudeBits = 112 - 85;
     double? latitude =
-        CoordinateUtils.calculateLatitudeFromRaw(rawLatitude, nrLatitudeBits);
+        CoordinateUtils().calculateLatitudeDirect(rawLatitude, nrLatitudeBits);
     double? speed =
         0 <= speedDecoded && speedDecoded <= 1022 ? speedDecoded / 10.0 : null;
     double? course = 0 <= courseDecoded && courseDecoded < 3600
